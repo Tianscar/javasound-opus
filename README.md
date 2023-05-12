@@ -1,5 +1,5 @@
 # Java Implementation of Opus
-This is a fork of [Oggus](https://github.com/leonfancy/oggus), with JavaSound SPI support.
+This is a fork of [Oggus](https://github.com/leonfancy/oggus), backported to Java 8, removed dependencies, with JavaSound SPI support.
 
 This is a Java library for reading and writing Ogg Opus stream. Opus packet structure is supported.
 
