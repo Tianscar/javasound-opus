@@ -1,5 +1,7 @@
 package org.chenliang.oggus.opus;
 
+import org.chenliang.oggus.util.IOUtil;
+
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -41,7 +43,7 @@ abstract class FixedFrameCountPacket extends OpusPacket {
 
         if (isVbr()) {
             for (int i = 0; i < getFrameCount() - 1; i++) {
-                out.writeBytes(OpusUtil.frameLengthToBytes(frames.get(i).length));
+                IOUtil.writeBytes(out, OpusUtil.frameLengthToBytes(frames.get(i).length));
             }
         }
 
@@ -64,10 +66,10 @@ abstract class FixedFrameCountPacket extends OpusPacket {
 
         if (isVbr()) {
             for (int i = 0; i < getFrameCount(); i++) {
-                out.writeBytes(OpusUtil.frameLengthToBytes(frames.get(i).length));
+                IOUtil.writeBytes(out, OpusUtil.frameLengthToBytes(frames.get(i).length));
             }
         } else {
-            out.writeBytes(OpusUtil.frameLengthToBytes(frames.get(0).length));
+            IOUtil.writeBytes(out, OpusUtil.frameLengthToBytes(frames.get(0).length));
         }
 
         writeFrames(out);
@@ -77,7 +79,7 @@ abstract class FixedFrameCountPacket extends OpusPacket {
 
     private void writeFrames(ByteArrayOutputStream out) {
         for (byte[] frame : frames) {
-            out.writeBytes(frame);
+            IOUtil.writeBytes(out, frame);
         }
     }
 }

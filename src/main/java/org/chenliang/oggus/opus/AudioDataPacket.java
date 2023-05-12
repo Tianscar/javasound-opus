@@ -1,5 +1,7 @@
 package org.chenliang.oggus.opus;
 
+import org.chenliang.oggus.util.IOUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +35,11 @@ public class AudioDataPacket {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         for (int i = 0; i < packetCount - 1; i++) {
             byte[] data = opusPackets.get(i).dumpToSelfDelimitingFormat();
-            outputStream.writeBytes(data);
+            IOUtil.writeBytes(outputStream, data);
         }
 
         byte[] data = opusPackets.get(packetCount - 1).dumpToStandardFormat();
-        outputStream.writeBytes(data);
+        IOUtil.writeBytes(outputStream, data);
 
         return outputStream.toByteArray();
     }

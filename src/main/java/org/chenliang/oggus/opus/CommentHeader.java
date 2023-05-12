@@ -1,9 +1,8 @@
 package org.chenliang.oggus.opus;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.io.LittleEndianDataInputStream;
-import com.google.common.io.LittleEndianDataOutputStream;
+import org.chenliang.oggus.util.IOUtil;
+import org.chenliang.oggus.util.LittleEndianDataInputStream;
+import org.chenliang.oggus.util.LittleEndianDataOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * The Comment Header packet of a Ogg Opus stream. It has following structure:
@@ -44,7 +45,25 @@ import java.util.Map;
 public class CommentHeader {
     public static final byte[] MAGIC_SIGNATURE = {'O', 'p', 'u', 's', 'T', 'a', 'g', 's'};
     private String vendor;
-    private final ListMultimap<String, String> tags = ArrayListMultimap.create();
+    private final Map<String, Collection<String>> tags = new HashMap<>();
+
+    private void putTag(String key, String value) {
+        Collection<String> collection = tags.get(key);
+        if (collection == null) {
+            collection = new HashSet<>();
+            collection.add(value);
+            tags.put(key, collection);
+        }
+        else collection.add(value);
+    }
+
+    private int numTags() {
+        int n = 0;
+        for (Collection<String> collection : tags.values()) {
+            n += collection.size();
+        }
+        return n;
+    }
 
     private CommentHeader() {
     }
@@ -62,20 +81,20 @@ public class CommentHeader {
         CommentHeader commentHeader = new CommentHeader();
         LittleEndianDataInputStream in = new LittleEndianDataInputStream(new ByteArrayInputStream(data));
         try {
-            if (!Arrays.equals(in.readNBytes(8), MAGIC_SIGNATURE)) {
+            if (!Arrays.equals(IOUtil.readNBytes(in, 8), MAGIC_SIGNATURE)) {
                 throw new InvalidOpusException("Comment Header packet doesn't start with 'OpusTags'");
             }
             int vendorLen = in.readInt();
             if (vendorLen != 0) {
-                commentHeader.vendor = new String(in.readNBytes(vendorLen));
+                commentHeader.vendor = new String(IOUtil.readNBytes(in, vendorLen));
             }
             int tagCount = in.readInt();
             for (int i = 0; i < tagCount; i++) {
                 int tagStrLen = in.readInt();
-                String tagStr = new String(in.readNBytes(tagStrLen));
+                String tagStr = new String(IOUtil.readNBytes(in, tagStrLen));
                 String[] parts = tagStr.split("=", 2);
                 if (parts.length == 2) {
-                    commentHeader.tags.put(parts[0].toUpperCase(), parts[1]);
+                    commentHeader.putTag(parts[0].toUpperCase(), parts[1]);
                 }
             }
             return commentHeader;
@@ -100,7 +119,7 @@ public class CommentHeader {
      * @return the tags
      */
     public Map<String, Collection<String>> getTags() {
-        return tags.asMap();
+        return tags;
     }
 
     /**
@@ -128,7 +147,7 @@ public class CommentHeader {
      * @param value tag value
      */
     public void addTag(String key, String value) {
-        this.tags.put(key.toUpperCase(), value);
+        this.putTag(key.toUpperCase(), value);
     }
 
     /**
@@ -148,11 +167,14 @@ public class CommentHeader {
                 out.writeInt(vendor.length());
                 out.write(vendor.getBytes(StandardCharsets.UTF_8));
             }
-            out.writeInt(tags.size());
-            for (Map.Entry<String, String> tag : tags.entries()) {
-                String commentString = tag.getKey() + "=" + tag.getValue();
-                out.writeInt(commentString.length());
-                out.write(commentString.getBytes(StandardCharsets.UTF_8));
+            out.writeInt(numTags());
+            for (Map.Entry<String, Collection<String>> tag : tags.entrySet()) {
+                String key = tag.getKey();
+                for (String value : tag.getValue()) {
+                    String commentString = key + "=" + value;
+                    out.writeInt(commentString.length());
+                    out.write(commentString.getBytes(StandardCharsets.UTF_8));
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("CommentHeader dump to byte array error", e);

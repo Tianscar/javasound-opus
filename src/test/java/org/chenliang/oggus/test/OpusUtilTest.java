@@ -1,5 +1,6 @@
-package org.chenliang.oggus.opus;
+package org.chenliang.oggus.test;
 
+import org.chenliang.oggus.opus.OpusUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

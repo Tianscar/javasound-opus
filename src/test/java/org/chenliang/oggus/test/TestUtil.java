@@ -1,4 +1,4 @@
-package org.chenliang.oggus;
+package org.chenliang.oggus.test;
 
 import org.chenliang.oggus.opus.OpusPacket;
 
@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestUtil {
+
     public static byte[] createBinary(int length, byte content) {
         byte[] frameData1 = new byte[length];
         Arrays.fill(frameData1, content);

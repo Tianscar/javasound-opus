@@ -1,7 +1,7 @@
 package org.chenliang.oggus.ogg;
 
-import com.google.common.io.LittleEndianDataOutputStream;
-import com.google.common.primitives.Bytes;
+import org.chenliang.oggus.util.LittleEndianDataOutputStream;
+import org.chenliang.oggus.util.Bytes;
 import org.chenliang.oggus.util.CRCUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -168,7 +168,7 @@ public class OggPage {
      * Oggus library users are not allowed to set checksum manually. Checksum will be automatically calculated when
      * <code>getCheckSum()</code> or <code>dump()</code> is called.
      */
-    void setCheckSum(int checkSum) {
+    public void setCheckSum(int checkSum) {
         this.checkSum = checkSum;
     }
 

@@ -1,6 +1,7 @@
 package org.chenliang.oggus.util;
 
 public class CRCUtil {
+
     protected static final int CRC_POLYNOMIAL = 0x04c11db7;
     private static final int[] CRC_TABLE = new int[256];
 

@@ -1,6 +1,6 @@
 package org.chenliang.oggus.opus;
 
-import com.google.common.primitives.Bytes;
+import org.chenliang.oggus.util.Bytes;
 import org.chenliang.oggus.ogg.OggPage;
 import org.chenliang.oggus.ogg.OggStream;
 

@@ -1,6 +1,7 @@
 package org.chenliang.oggus.ogg;
 
-import com.google.common.io.LittleEndianDataInputStream;
+import org.chenliang.oggus.util.IOUtil;
+import org.chenliang.oggus.util.LittleEndianDataInputStream;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -100,20 +101,20 @@ public class OggStream {
         oggPage.setSeqNum(Integer.toUnsignedLong(in.readInt()));
         oggPage.setCheckSum(in.readInt());
         int segCount = in.readUnsignedByte();
-        byte[] laceValues = in.readNBytes(segCount);
+        byte[] laceValues = IOUtil.readNBytes(in, segCount);
 
         int packetLen = 0;
         for (byte laceValue : laceValues) {
             int segLen = Byte.toUnsignedInt(laceValue);
             packetLen += segLen;
             if (segLen < OggPage.MAX_LACE_VALUE) {
-                byte[] data = in.readNBytes(packetLen);
+                byte[] data = IOUtil.readNBytes(in, packetLen);
                 oggPage.addDataPacket(data);
                 packetLen = 0;
             }
         }
         if (packetLen != 0) {
-            byte[] data = in.readNBytes(packetLen);
+            byte[] data = IOUtil.readNBytes(in, packetLen);
             oggPage.addPartialDataPacket(data);
         }
         return oggPage;

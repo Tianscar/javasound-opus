@@ -1,10 +1,8 @@
-package org.chenliang.oggus.opus;
+package org.chenliang.oggus.test;
 
-import com.google.common.base.Strings;
-import com.google.common.primitives.Bytes;
-import com.google.common.primitives.Ints;
-import org.chenliang.oggus.TestUtil;
 import org.chenliang.oggus.ogg.OggPage;
+import org.chenliang.oggus.opus.*;
+import org.chenliang.oggus.util.Bytes;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -293,9 +291,8 @@ class OggOpusStreamTest {
     }
 
     @Test
-    @Disabled
     void should_read_ogg_stream() throws IOException {
-        OggOpusStream oggOpusStream = OggOpusStream.from("audio/technology.opus");
+        OggOpusStream oggOpusStream = OggOpusStream.from("src/test/resources/fbodemo1.opus");
         IdHeader idHeader = oggOpusStream.getIdHeader();
 
         System.out.printf("Version: %d.%d\n", idHeader.getMajorVersion(), idHeader.getMinorVersion());

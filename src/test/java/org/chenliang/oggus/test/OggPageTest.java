@@ -1,7 +1,8 @@
-package org.chenliang.oggus.ogg;
+package org.chenliang.oggus.test;
 
-import com.google.common.primitives.Bytes;
-import org.chenliang.oggus.TestUtil;
+import org.chenliang.oggus.ogg.InvalidOggException;
+import org.chenliang.oggus.ogg.OggPage;
+import org.chenliang.oggus.util.Bytes;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;

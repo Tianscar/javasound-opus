@@ -1,5 +1,7 @@
 package org.chenliang.oggus.opus;
 
+import org.chenliang.oggus.util.IOUtil;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,17 +94,17 @@ public class OpusPackets {
         OpusPacket opusPacket = newPacketOfToc(toc);
         switch (opusPacket.getCode()) {
             case 0:
-                opusPacket.addFrame(in.readAllBytes());
+                opusPacket.addFrame(IOUtil.readAllBytes(in));
                 break;
             case 1:
                 int leftDataLen = in.available();
-                opusPacket.addFrame(in.readNBytes(leftDataLen / 2));
-                opusPacket.addFrame(in.readNBytes(leftDataLen / 2));
+                opusPacket.addFrame(IOUtil.readNBytes(in, leftDataLen / 2));
+                opusPacket.addFrame(IOUtil.readNBytes(in, leftDataLen / 2));
                 break;
             case 2:
                 int frameLen1 = readFrameLen(in);
-                opusPacket.addFrame(in.readNBytes(frameLen1));
-                opusPacket.addFrame(in.readAllBytes());
+                opusPacket.addFrame(IOUtil.readNBytes(in, frameLen1));
+                opusPacket.addFrame(IOUtil.readAllBytes(in));
                 break;
             case 3:
                 readCode3PacketHeader(in, opusPacket);
@@ -112,14 +114,14 @@ public class OpusPackets {
                         frameLens[k] = readFrameLen(in);
                     }
                     for (int k = 0; k < opusPacket.getFrameCount() - 1; k++) {
-                        opusPacket.addFrame(in.readNBytes(frameLens[k]));
+                        opusPacket.addFrame(IOUtil.readNBytes(in, frameLens[k]));
                     }
                     int lastFrameLen = in.available() - opusPacket.getPadDataLen();
-                    opusPacket.addFrame(in.readNBytes(lastFrameLen));
+                    opusPacket.addFrame(IOUtil.readNBytes(in, lastFrameLen));
                 } else {
                     int frameLen = (in.available() - opusPacket.getPadDataLen()) / opusPacket.getFrameCount();
                     for (int k = 0; k < opusPacket.getFrameCount(); k++) {
-                        opusPacket.addFrame(in.readNBytes(frameLen));
+                        opusPacket.addFrame(IOUtil.readNBytes(in, frameLen));
                     }
                 }
                 if (opusPacket.hasPadding()) {
@@ -136,18 +138,18 @@ public class OpusPackets {
         switch (opusPacket.getCode()) {
             case 0:
                 int frameLen = readFrameLen(in);
-                opusPacket.addFrame(in.readNBytes(frameLen));
+                opusPacket.addFrame(IOUtil.readNBytes(in, frameLen));
                 break;
             case 1:
                 frameLen = readFrameLen(in);
-                opusPacket.addFrame(in.readNBytes(frameLen));
-                opusPacket.addFrame(in.readNBytes(frameLen));
+                opusPacket.addFrame(IOUtil.readNBytes(in, frameLen));
+                opusPacket.addFrame(IOUtil.readNBytes(in, frameLen));
                 break;
             case 2:
                 int frameLen1 = readFrameLen(in);
                 int frameLen2 = readFrameLen(in);
-                opusPacket.addFrame(in.readNBytes(frameLen1));
-                opusPacket.addFrame(in.readNBytes(frameLen2));
+                opusPacket.addFrame(IOUtil.readNBytes(in, frameLen1));
+                opusPacket.addFrame(IOUtil.readNBytes(in, frameLen2));
                 break;
             case 3:
                 readCode3PacketHeader(in, opusPacket);
@@ -157,12 +159,12 @@ public class OpusPackets {
                         frameLens[k] = readFrameLen(in);
                     }
                     for (int k = 0; k < opusPacket.getFrameCount(); k++) {
-                        opusPacket.addFrame(in.readNBytes(frameLens[k]));
+                        opusPacket.addFrame(IOUtil.readNBytes(in, frameLens[k]));
                     }
                 } else {
                     frameLen = readFrameLen(in);
                     for (int k = 0; k < opusPacket.getFrameCount(); k++) {
-                        opusPacket.addFrame(in.readNBytes(frameLen));
+                        opusPacket.addFrame(IOUtil.readNBytes(in, frameLen));
                     }
                 }
                 if (opusPacket.hasPadding()) {

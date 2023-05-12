@@ -1,7 +1,11 @@
-package org.chenliang.oggus.opus;
+package org.chenliang.oggus.test;
 
-import com.google.common.primitives.Bytes;
-import org.chenliang.oggus.TestUtil;
+import org.chenliang.oggus.opus.AudioDataPacket;
+import org.chenliang.oggus.opus.Config;
+import org.chenliang.oggus.opus.Channel;
+import org.chenliang.oggus.opus.OpusPacket;
+import org.chenliang.oggus.opus.OpusPackets;
+import org.chenliang.oggus.util.Bytes;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;

@@ -1,5 +1,7 @@
 package org.chenliang.oggus.opus;
 
+import org.chenliang.oggus.util.IOUtil;
+
 import java.io.ByteArrayOutputStream;
 
 class CodeThreePacket extends OpusPacket {
@@ -75,18 +77,18 @@ class CodeThreePacket extends OpusPacket {
         if (isVbr) {
             int count = isStandard ? frames.size() - 1 : frames.size();
             for (int i = 0; i < count; i++) {
-                out.writeBytes(OpusUtil.frameLengthToBytes(frames.get(i).length));
+                IOUtil.writeBytes(out, OpusUtil.frameLengthToBytes(frames.get(i).length));
             }
         } else {
             if (!isStandard) {
-                out.writeBytes(OpusUtil.frameLengthToBytes(frames.get(0).length));
+                IOUtil.writeBytes(out, OpusUtil.frameLengthToBytes(frames.get(0).length));
             }
         }
         for (byte[] frame : frames) {
-            out.writeBytes(frame);
+            IOUtil.writeBytes(out, frame);
         }
         if (hasPadding) {
-            out.writeBytes(new byte[getPadDataLen()]);
+            IOUtil.writeBytes(out, new byte[getPadDataLen()]);
         }
 
         return out.toByteArray();

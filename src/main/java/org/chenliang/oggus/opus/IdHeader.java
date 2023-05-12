@@ -1,7 +1,8 @@
 package org.chenliang.oggus.opus;
 
-import com.google.common.io.LittleEndianDataInputStream;
-import com.google.common.io.LittleEndianDataOutputStream;
+import org.chenliang.oggus.util.IOUtil;
+import org.chenliang.oggus.util.LittleEndianDataInputStream;
+import org.chenliang.oggus.util.LittleEndianDataOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -58,7 +59,7 @@ public class IdHeader {
         IdHeader idHeader = new IdHeader();
         LittleEndianDataInputStream in = new LittleEndianDataInputStream(new ByteArrayInputStream(data));
         try {
-            if (!Arrays.equals(in.readNBytes(8), MAGIC_SIGNATURE)) {
+            if (!Arrays.equals(IOUtil.readNBytes(in, 8), MAGIC_SIGNATURE)) {
                 throw new InvalidOpusException("Id Header packet doesn't start with 'OpusHead'");
             }
             byte version = in.readByte();

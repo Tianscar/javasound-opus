@@ -1,9 +1,7 @@
-# Ignore Gradle project-specific cache directory
-.gradle
+/.idea/
+/.gradle/
+/build/
+/build/classes/java/main/
+/build/classes/java/test/
 
-# Ignore Gradle build output directory
-build
-
-.idea/
-
-out/
+/src/test/resources/

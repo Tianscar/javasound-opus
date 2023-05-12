@@ -1,5 +1,7 @@
-package org.chenliang.oggus.opus;
+package org.chenliang.oggus.test;
 
+import org.chenliang.oggus.opus.IdHeader;
+import org.chenliang.oggus.opus.InvalidOpusException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
