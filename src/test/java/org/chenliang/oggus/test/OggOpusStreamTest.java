@@ -292,7 +292,7 @@ class OggOpusStreamTest {
 
     @Test
     void should_read_ogg_stream() throws IOException {
-        OggOpusStream oggOpusStream = OggOpusStream.from("src/test/resources/fbodemo1.opus");
+        OggOpusStream oggOpusStream = OggOpusStream.from("src/test/resources/fbodemo1_opus.ogg");
         IdHeader idHeader = oggOpusStream.getIdHeader();
 
         System.out.printf("Version: %d.%d\n", idHeader.getMajorVersion(), idHeader.getMinorVersion());
